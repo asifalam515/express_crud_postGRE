@@ -75,6 +75,31 @@ app.get("/users", async (req: Request, res: Response) => {
     });
   }
 });
+// get single data
+app.get("/user/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    // const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+
+    const user = await pool.query(`SELECT * FROM users WHERE id=$1`, [id]);
+    if (user.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "user not found" });
+    }
+
+    res.status(200).json({
+      message: "single user retrieve",
+      success: true,
+      data: user.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
