@@ -66,7 +66,7 @@ app.get("/users", async (req: Request, res: Response) => {
     const allUsers = await pool.query(`SELECT * FROM users`);
     res.status(200).json({
       success: true,
-      data: allUsers,
+      data: allUsers.rows,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -136,7 +136,7 @@ app.delete("/user/:id", async (req: Request, res: Response) => {
       `DELETE FROM users WHERE id=$1 RETURNING *`,
       [id]
     );
-    if (deletedUser.rows.length === 0) {
+    if (deletedUser.rowCount === 0) {
       res.status(500).json({
         success: false,
         message: "no user deleted",
@@ -144,6 +144,7 @@ app.delete("/user/:id", async (req: Request, res: Response) => {
     }
     res.status(200).json({
       success: true,
+      data: deletedUser.rows,
       message: "User Deleted Successfully",
     });
   } catch (error: any) {
