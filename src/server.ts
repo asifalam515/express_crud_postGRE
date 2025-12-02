@@ -240,6 +240,30 @@ app.put("/todos/:id", async (req: Request, res: Response) => {
     });
   }
 });
+// delete
+app.delete("/todos/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const deleteUser = await pool.query(
+      `DELETE FROM todos WHERE id=$1 RETURNING *`,
+      [id]
+    );
+    if (deleteUser.rowCount === 0) {
+      res.send("no user deleted");
+    }
+    res.status(200).json({
+      success: true,
+      message: "todo deleted",
+      data: deleteUser.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: "can't Delete todo",
+      error: error.message,
+    });
+  }
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
