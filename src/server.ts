@@ -264,6 +264,15 @@ app.delete("/todos/:id", async (req: Request, res: Response) => {
     });
   }
 });
+
+// not found route(always place in the bottom  of the code)
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "route not found",
+    path: req.path,
+  });
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
