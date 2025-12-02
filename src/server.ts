@@ -213,6 +213,33 @@ app.get("/todos/:id", async (req: Request, res: Response) => {
     });
   }
 });
+// update /put
+app.put("/todos/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { title } = req.body;
+  try {
+    const result = await pool.query(
+      //                 "UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *",
+
+      `UPDATE todos SET title=$1 WHERE id=$2 RETURNING *`,
+      [title, id]
+    );
+    if (result.rows.length === 0) {
+      res.send("no todos updated");
+    }
+    res.status(500).json({
+      success: true,
+      message: "single data updated",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(200).json({
+      success: true,
+      message: "can't update todo",
+      error: error.message,
+    });
+  }
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
