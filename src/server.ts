@@ -18,60 +18,6 @@ app.get("/", logger, (req: Request, res: Response) => {
 //users crud
 app.use("/users", userRoutes);
 
-// update user
-app.put("/user/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { name, email, age } = req.body;
-    const updatedUser = await pool.query(
-      `UPDATE users SET name=$1,email=$2,age=$3 WHERE id=$4 RETURNING*`,
-      [name, email, age, id]
-    );
-    if (updatedUser.rows.length === 0) {
-      res.status(500).json({
-        success: false,
-        message: "no user to update",
-      });
-    }
-    res.status(200).json({
-      success: true,
-      data: updatedUser.rows[0],
-      message: "single data  updated",
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
-  }
-});
-// delete user
-app.delete("/user/:id", async (req: Request, res: Response) => {
-  const id = req.params.id;
-  try {
-    const deletedUser = await pool.query(
-      `DELETE FROM users WHERE id=$1 RETURNING *`,
-      [id]
-    );
-    if (deletedUser.rowCount === 0) {
-      res.status(500).json({
-        success: false,
-        message: "no user deleted",
-      });
-    }
-    res.status(200).json({
-      success: true,
-      data: deletedUser.rows,
-      message: "User Deleted Successfully",
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      error: error.message,
-    });
-  }
-});
-
 // todos CRUD
 app.post("/todos", async (req: Request, res: Response) => {
   const { user_id, title } = req.body;

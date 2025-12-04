@@ -27,9 +27,16 @@ const updateUserToDB = async (
   );
   return result;
 };
+const deleteUserFromDB = async (id: any) => {
+  const result = await pool.query(`DELETE FROM users WHERE id=$1 RETURNING *`, [
+    id,
+  ]);
+  return result;
+};
 export const userService = {
   createUserIntoDB,
   getUsersFromDB,
   getUserFromDB,
   updateUserToDB,
+  deleteUserFromDB,
 };
