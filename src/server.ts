@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import config from "./config";
 import { initDB, pool } from "./config/db";
 import { logger } from "./middleware/logger";
+import { authRoutes } from "./modules/auth/auth.route";
 import { userRoutes } from "./modules/user/user.routes";
 const app = express();
 const port = config.port;
@@ -136,6 +137,9 @@ app.use((req: Request, res: Response) => {
     path: req.path,
   });
 });
+
+// auth routes
+app.use("/auth", authRoutes);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
