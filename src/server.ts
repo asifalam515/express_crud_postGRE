@@ -18,6 +18,7 @@ app.get("/", logger, (req: Request, res: Response) => {
 });
 //users crud
 app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 
 // todos CRUD
 app.post("/todos", async (req: Request, res: Response) => {
@@ -139,7 +140,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // auth routes
-app.use("/auth", authRoutes);
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
